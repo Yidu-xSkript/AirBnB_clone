@@ -7,7 +7,7 @@ baseModel.my_number = 89
 print(baseModel)
 baseModel.save()
 print(baseModel)
-baseModelJSON = baseModel.todict()
+baseModelJSON = baseModel.to_dict()
 print(baseModelJSON)
 print("JSON of baseModel:")
 for key in baseModelJSON.keys():

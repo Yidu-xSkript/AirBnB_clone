@@ -15,12 +15,14 @@ class BaseModel():
         # storage.new()
 
     def __str__(self) -> str:
-        print(f"[{self.__class__.__name__}]({self.id})<{self.__dict__}>")
+        return "[{}](%d)<{}>".format(self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
         self.updated_at = datetime.datetime.now()
         # storage.save()
 
-    # Change created_at and updated_at to string from datetime datatype when adding to dict
-    def to_dict(self):
+    def to_dict(self) -> dict:
+        self.__dict__['__class__'] = self.__class__.__name__
+        self.__dict__['created_at'] = self.__dict__['created_at'].strftime("%Y-%m-%dT%H:%M:%S.%f")
+        self.__dict__['updated_at'] = self.__dict__['updated_at'].strftime("%Y-%m-%dT%H:%M:%S.%f")
         return self.__dict__

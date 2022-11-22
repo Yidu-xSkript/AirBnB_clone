@@ -87,3 +87,6 @@ class HBNBCommand(cmd.Cmd):
 
     def count():
         pass
+
+if __name__ == '__main__':
+    HBNBCommand().cmdloop()

@@ -13,11 +13,11 @@ print("JSON of baseModel:")
 for key in baseModelJSON.keys():
     print("\t{}: ({}) - {}".format(key, type(baseModelJSON[key]), baseModelJSON[key]))
 
-print("--")
-my_new_model = BaseModel(**baseModelJSON)
-print(my_new_model.id)
-print(my_new_model)
-print(type(my_new_model.created_at))
+# print("--")
+# my_new_model = BaseModel(**baseModelJSON)
+# print(my_new_model.id)
+# print(my_new_model)
+# print(type(my_new_model.created_at))
 
-print("--")
-print(baseModel is my_new_model)
+# print("--")
+# print(baseModel is my_new_model)

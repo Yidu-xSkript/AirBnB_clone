@@ -1,64 +1,117 @@
 #!/usr/bin/python3
 import cmd
 from models.base_model import BaseModel
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review  import Review
+from models.state import State
+from models.user import User
+from models import storage
 
 class HBNBCommand(cmd.Cmd):
-    # Your command interpreter should implement: 
-    # - quit and EOF to exit the program
-    # - help (this action is provided by default by cmd but you should keep it updated and documented as you work through tasks)
-    # - a custom prompt: (hbnb)
-    # - an empty line + ENTER shouldn’t execute anything
-    # Your code should not be executed when imported
-    # if __name__ == '__main__':
-    # HBNBCommand().cmdloop()
+    # The \n on the commands might cause problem
 
-    # ----------------------------------------
-    # RULES
-    # =========================
-    # You can assume arguments are always in the right order
-    # Each arguments are separated by a space
-    # A string argument with a space must be between double quote
-    # The error management starts from the first argument to the last one
+    prompt = '(hbtn) '
+    classes = ['BaseModel', 'City', 'Place', 'Review', 'State', 'User', 'Amenity']
 
-    def create():
-        """
-        Creates a new instance of BaseModel, saves it (to the JSON file) and prints the id. Ex: $ create BaseModel
-        """
-        # Creates a new instance of BaseModel, saves it (to the JSON file) and prints the id. Ex: $ create BaseModel
-        # If the class name is missing, print ** class name missing ** (ex: $ create)
-        # If the class name doesn’t exist, print ** class doesn't exist ** (ex: $ create MyModel)
-        baseModel = BaseModel()
-        pass
+    def do_EOF(self, arg):
+        'Ctrl-D (i.e. EOF) to exit \n'
+        exit()
 
-    def show():
-        """
-        Prints the string representation of an instance based on the class name and id. Ex: $ show BaseModel 1234-1234-1234. 
-        """
-        # If the class name is missing, print ** class name missing ** (ex: $ show)
-        # If the class name doesn’t exist, print ** class doesn't exist ** (ex: $ show MyModel)
-        # If the id is missing, print ** instance id missing ** (ex: $ show BaseModel)
-        # If the instance of the class name doesn’t exist for the id, print ** no instance found ** (ex: $ show BaseModel 121212)
-        pass
-
-    def destroy():
-        """
-         Deletes an instance based on the class name and id (save the change into the JSON file). Ex: $ destroy BaseModel 1234-1234-1234. 
-        """
+    def do_quit(self, arg):
+        'Quit command to exit the program \n'
+        quit()
         
-        # If the class name is missing, print ** class name missing ** (ex: $ destroy)
-        # If the class name doesn’t exist, print ** class doesn't exist ** (ex:$ destroy MyModel)
-        # If the id is missing, print ** instance id missing ** (ex: $ destroy BaseModel)
-        # If the instance of the class name doesn’t exist for the id, print ** no instance found ** (ex: $ destroy BaseModel 121212)
+    def emptyline(self):
+         pass
 
-        pass
+    def do_create(self, arg):
+        'Creates a new instance of A Class, saves it (to the JSON file) and prints the id. Ex: $ create BaseModel \n'
 
-    def all():
-        """
-        Prints all string representation of all instances based or not on the class name. Ex: $ all BaseModel or $ all.
-        """        
-        # The printed result must be a list of strings (like the example below)
-        # If the class name doesn’t exist, print ** class doesn't exist ** (ex: $ all MyModel)
-        pass
+        if arg == "":
+            print("** class name missing **")
+            return
+
+        if arg != "" and arg not in self.classes:
+            print("** class doesn't exist **")
+            return
+
+        model = BaseModel()
+        model.save()
+        print(model.id)
+
+    def do_show(self, arg):
+        'Prints the string representation of an instance based on the class name and id. Ex: $ show BaseModel 1234-1234-1234. \n'
+        args = arg.split(" ")
+
+        if args[0] == "":
+            print("** class name missing **")
+            return
+
+        if args[0] != "" and args[0] not in self.classes:
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        storage.reload()
+        allData = storage.all()
+
+        if args[0] + '.' + args[1] in allData.keys():
+            print(f"[{args[0]}] ({args[1]}) {allData[args[0] + '.' + args[1]]}")
+        else:
+            print("** no instance found **")
+
+    def do_destroy(self, arg):
+        'Deletes an instance based on the class name and id (save the change into the JSON file). Ex: $ destroy BaseModel 1234-1234-1234. \n'
+
+        args = arg.split(" ")
+
+        if args[0] == "":
+            print("** class name missing **")
+            return
+
+        if args[0] != "" and args[0] not in self.classes:
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        storage.reload()
+        allData = storage.all()
+        
+        if args[0] + '.' + args[1] in allData.keys():
+            allData.pop(args[0] + '.' + args[1])
+            storage.save()
+        else:
+            print("** no instance found **")
+
+    def do_all(self, arg):
+        'Prints all string representation of all instances based or not on the class name. Ex: $ all BaseModel or $ all. \n'
+
+        if len(arg) > 0 and arg not in self.classes:
+            print("** class doesn't exist **")
+            return
+
+        storage.reload()
+        allData = storage.all()
+
+        dataKey = list(allData.keys())
+        splitData = list()
+
+        for i in range(len(dataKey)):            
+            if len(arg) > 0 and arg == dataKey[i].split(".")[0]:
+                splitData.append("[{}] ({}) {}".format(dataKey[i].split(".")[0], list(allData.values())[i]['id'], list(allData.values())[i]))
+            elif len(arg) == 0:
+                splitData.append("[{}] ({}) {}".format(dataKey[i].split(".")[0], list(allData.values())[i]['id'], list(allData.values())[i]))
+
+        print(splitData)
+
 
     def update():
         """
@@ -80,12 +133,6 @@ class HBNBCommand(cmd.Cmd):
         # id, created_at and updated_at cant’ be updated. You can assume they won’t be passed in the update command
         # Only “simple” arguments can be updated: string, integer and float. You can assume nobody will try to update list of ids or datetime
 
-        pass
-    
-    def allClass():
-        pass
-
-    def count():
         pass
 
 if __name__ == '__main__':

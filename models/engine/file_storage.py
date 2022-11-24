@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import json
 from pathlib import Path
+import datetime
 
 class FileStorage():
     def __file_path(self) -> str:
@@ -26,14 +27,21 @@ class FileStorage():
         """ 
         sets in __objects the obj with key <obj class name>.id
         Args:
-            obj (_type_): _description_
+            obj (class): self
         """
-        self.__dict__[obj.__class__.__name__ + '.' + obj.__dict__['id']] = obj.to_dict()
+        self.__dict__[obj.__class__.__name__ + '.' + obj.__dict__['id']] = obj.__dict__
 
     def save(self):
         """
         serializes __objects to the JSON file (path: __file_path)
         """
+        for o in self.__objects().values():
+            o['updated_at'] = datetime.datetime.now()
+            if type(o['created_at']) != str:
+                o['created_at'] = o['created_at'].strftime("%Y-%m-%dT%H:%M:%S.%f")
+            if type(o['updated_at']) != str:
+                o['updated_at'] = o['updated_at'].strftime("%Y-%m-%dT%H:%M:%S.%f")
+
         with open(self.__file_path(), 'w') as fp:
             json.dump(self.__objects(), fp)
 
@@ -45,4 +53,10 @@ class FileStorage():
         file = Path(self.__file_path())
         if file.is_file():
             with open(self.__file_path(), "r") as fp:
-                self.__dict__ = json.load(fp)
+                self.__dict__.update(json.load(fp))
+
+        for o in self.__objects().values():
+            if type(o['created_at']) == str:
+                o['created_at'] = datetime.datetime.strptime(o['created_at'], "%Y-%m-%dT%H:%M:%S.%f")
+            if type(o['updated_at']) == str:
+                o['updated_at'] = datetime.datetime.strptime(o['updated_at'], "%Y-%m-%dT%H:%M:%S.%f")

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from models.base_model import BaseModel
+from models import storage
 
 class User(BaseModel):
     """
@@ -9,16 +10,13 @@ class User(BaseModel):
         BaseModel (_type_): BaseModel that contains updated_at, created_at & uuid, where this class uses as a parent model
     """
 
-    def __init__(self, email, password, first_name, last_name):
+    def __init__(self):
         """Initializing User Attr.
-
-        Args:
-            email (string): email of the user
-            password (string): password
-            first_name (string): firstname of the user
-            last_name (string): lastname of the user
         """
-        self.email = email
-        self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
+        BaseModel.__init__(self)
+        self.email = ""
+        self.password = ""
+        self.first_name = ""
+        self.last_name = ""
+        
+        storage.new(self)

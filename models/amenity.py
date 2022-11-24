@@ -2,10 +2,11 @@
 from models.base_model import BaseModel
 
 class Amenity(BaseModel):
-    def __init__(self, name):
+    def __init__(self):
         """Initializing Ammenity Attr.
 
         Args:
             name (string): name of the amnenity.
         """
-        self.name = name
+        BaseModel.__init__(self)
+        self.name = ""

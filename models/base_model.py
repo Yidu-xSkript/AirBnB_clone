@@ -19,8 +19,8 @@ class BaseModel():
             for k, v in kwargs.items():
                 if k == "created_at" and type(k) == str or k == "updated_at" and type(k) == str:
                     self.__dict__[k] = datetime.datetime.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
-        # else:
-        #     models.storage.new(self)
+        else:
+            models.storage.new(self)
 
     def __str__(self) -> str:
         return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
@@ -31,7 +31,7 @@ class BaseModel():
         - save data to JSON file.
         """
         self.updated_at = datetime.datetime.now()
-        # models.storage.save()
+        models.storage.save()
 
     def to_dict(self) -> dict:
         """Modify Dictionary and return the modified dictionary

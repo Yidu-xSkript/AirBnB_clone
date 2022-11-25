@@ -10,6 +10,7 @@ from models.user import User
 from models import storage
 import shlex
 import re
+import json
 
 class HBNBCommand(cmd.Cmd):
     # The \n on the commands might cause a problem
@@ -140,11 +141,11 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
 
-        if len(args) < 3:
+        if len(args) < 3 and type(eval(args[2])) != dict:
             print("** attribute name missing **")
             return
 
-        if len(args) < 4:
+        if len(args) < 4 and type(eval(args[2])) != dict:
             print("** value missing **")
             return
 
@@ -152,9 +153,17 @@ class HBNBCommand(cmd.Cmd):
         allData = storage.all()
 
         if args[0] + '.' + args[1] in allData.keys():
-            if args[2] != 'id' and args[2] != 'created_at' and args[2] != 'updated_at':
-                allData[args[0] + '.' + args[1]].__dict__[args[2]] = args[3]
-                storage.save()
+            if len(args) == 4:
+                if args[2] != 'id' and args[2] != 'created_at' and args[2] != 'updated_at':
+                    allData[args[0] + '.' + args[1]].__dict__[args[2]] = args[3]
+            elif type(eval(args[2])) == dict:
+                for k, v in eval(args[2]).items():
+                    if (k in allData[args[0] + '.' + args[1]].__class__.__dict__.keys() and type(allData[args[0] + '.' + args[1]].__class__.__dict__[k]) in {str, int, float}):
+                        valtype = type(allData[args[0] + '.' + args[1]].__class__.__dict__[k])
+                        allData[args[0] + '.' + args[1]].__dict__[k] = valtype(v)
+                    else:
+                        allData[args[0] + '.' + args[1]].__dict__[k] = v
+            storage.save()
         else:
             print("** no instance found **")
 
@@ -177,7 +186,7 @@ class HBNBCommand(cmd.Cmd):
                 splitData.append(dataKey[i].split(".")[0])
 
         print(len(splitData))
-        
+
     def onecmd(self, line: str) -> bool:
         c = line.split(".")
 
@@ -195,15 +204,24 @@ class HBNBCommand(cmd.Cmd):
 
         splitable = re.findall('"([^"]*)"', c[1])
 
-
         if len(splitable) == 1:
             if c[1].replace('("' + splitable[0] + '")', '') == "show":
                 return super().onecmd(f'show {c[0]} {splitable[0]}')
             if c[1].replace('("' + splitable[0] + '")', '') == "destroy":
                 return super().onecmd(f'destroy {c[0]} {splitable[0]}')
 
-        # if len(splitable) == 2:
-        #     pass
+        curly_braces = re.search(r"\{(.*?)\}", line)
+        retl = []
+        if curly_braces is not None:
+            lexer = shlex.split(line[:curly_braces.span()[0]])
+            retl = [i.strip(",") for i in lexer]
+            retl.append(curly_braces.group())
+
+        if len(retl) == 2:
+            _splitable = retl[0].split("(")
+            _splitable2 = _splitable[0].split(".")
+            if _splitable2[1] == "update":
+                return super().onecmd(f'update {_splitable2[0]} {_splitable[1]} {json.dumps(retl[1])}')
 
         if len(splitable) == 3:
             if c[1].replace('("' + splitable[0] + '", "' + splitable[1] + '", "' + splitable[2] + '")', '') == "update":

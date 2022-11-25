@@ -71,7 +71,7 @@ class HBNBCommand(cmd.Cmd):
         allData = storage.all()
 
         if args[0] + '.' + args[1] in allData.keys():
-            print(f"[{args[0]}] ({args[1]}) {allData[args[0] + '.' + args[1]]}")
+            print(f"{allData[args[0] + '.' + args[1]]}")
         else:
             print("** no instance found **")
 
@@ -113,14 +113,12 @@ class HBNBCommand(cmd.Cmd):
         storage.reload()
         allData = storage.all()
 
-        dataKey = list(allData.keys())
         splitData = list()
-
-        for i in range(len(dataKey)):            
-            if len(arg) > 0 and arg == dataKey[i].split(".")[0]:
-                splitData.append("[{}] ({}) {}".format(dataKey[i].split(".")[0], list(allData.values())[i]['id'], list(allData.values())[i]))
-            elif len(arg) == 0:
-                splitData.append("[{}] ({}) {}".format(dataKey[i].split(".")[0], list(allData.values())[i]['id'], list(allData.values())[i]))
+        for data in allData.values():
+            if len(arg) > 0 and arg == data.__class__.__name__:
+                splitData.append(data.__str__())
+            if len(arg) == 0:
+                splitData.append(data.__str__())
 
         print(splitData)
 
@@ -155,7 +153,7 @@ class HBNBCommand(cmd.Cmd):
 
         if args[0] + '.' + args[1] in allData.keys():
             if args[2] != 'id' and args[2] != 'created_at' and args[2] != 'updated_at':
-                allData[args[0] + '.' + args[1]][args[2]] = args[3]
+                allData[args[0] + '.' + args[1]].__dict__[args[2]] = args[3]
                 storage.save()
         else:
             print("** no instance found **")

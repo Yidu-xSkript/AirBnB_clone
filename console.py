@@ -22,14 +22,15 @@ class HBNBCommand(cmd.Cmd):
         print('Ctrl-D (i.e. EOF) to exit \n')
 
     def do_EOF(self, arg):
-        print("")
+        """EOF signal to exit the program."""
         return True
 
     def help_quit(self):
         print('Quit command to exit the program \n')
 
     def do_quit(self, arg):
-        quit()
+        """Quit command to exit the program."""
+        return True
         
     def emptyline(self):
          pass

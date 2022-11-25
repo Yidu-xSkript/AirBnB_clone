@@ -15,13 +15,14 @@ class HBNBCommand(cmd.Cmd):
     # The \n on the commands might cause a problem
 
     prompt = '(hbtn) '
-    classes = ['BaseModel', 'City', 'Place', 'Review', 'State', 'User', 'Amenity']
+    __classes = ['BaseModel', 'City', 'Place', 'Review', 'State', 'User', 'Amenity']
 
     def help_EOF(self):
         print('Ctrl-D (i.e. EOF) to exit \n')
 
     def do_EOF(self, arg):
-        exit()
+        print("")
+        return True
 
     def help_quit(self):
         print('Quit command to exit the program \n')
@@ -40,7 +41,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        if arg != "" and arg not in self.classes:
+        if arg != "" and arg not in self.__classes:
             print("** class doesn't exist **")
             return
 
@@ -58,7 +59,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        if len(args) > 0 and args[0] not in self.classes:
+        if len(args) > 0 and args[0] not in self.__classes:
             print("** class doesn't exist **")
             return
 
@@ -84,7 +85,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        if len(args) > 0 and args[0] not in self.classes:
+        if len(args) > 0 and args[0] not in self.__classes:
             print("** class doesn't exist **")
             return
 
@@ -105,7 +106,7 @@ class HBNBCommand(cmd.Cmd):
         print('Prints all string representation of all instances based or not on the class name. Ex: $ all BaseModel or $ all. \n')
 
     def do_all(self, arg):        
-        if arg != "" and arg not in self.classes:
+        if arg != "" and arg not in self.__classes:
             print("** class doesn't exist **")
             return
 
@@ -133,7 +134,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        if len(args) > 0 and args[0] not in self.classes:
+        if len(args) > 0 and args[0] not in self.__classes:
             print("** class doesn't exist **")
             return
 
@@ -159,8 +160,11 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** no instance found **")
 
+    def help_count(self):
+        print("Counts how many items there are based on a <classname>")
+
     def do_count(self, arg):
-        if arg != "" and arg not in self.classes:
+        if arg != "" and arg not in self.__classes:
             print("** class doesn't exist **")
             return
 
@@ -182,7 +186,7 @@ class HBNBCommand(cmd.Cmd):
         if len(c) != 2 or line.count('.') != 1 or line.count('(') != 1 or line.count(')') != 1:
             return super().onecmd(line)
         
-        if c[0] not in self.classes:
+        if c[0] not in self.__classes:
             return super().onecmd(line)
 
         if c[1].replace('()', '') == "all": 
@@ -192,6 +196,7 @@ class HBNBCommand(cmd.Cmd):
             return super().onecmd(f'count {c[0]}')
 
         splitable = re.findall('"([^"]*)"', c[1])
+
 
         if len(splitable) == 1:
             if c[1].replace('("' + splitable[0] + '")', '') == "show":

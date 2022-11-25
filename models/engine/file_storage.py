@@ -1,27 +1,22 @@
 #!/usr/bin/python3
 import json
-from pathlib import Path
-import datetime
+from models.base_model import BaseModel
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.user import User
+from models.state import State
 
 class FileStorage():
-    def __file_path(self) -> str:
-        """
-        string - path to the JSON file (ex: file.json)
-        """        
-        return "file.json"
-
-    def __objects(self) -> dict:
-        """
-        empty but will store all objects by <class name>.id 
-        (ex: to store a BaseModel object with id=12121212, the key will be BaseModel.12121212)
-        """        
-        return self.__dict__
+    __file_path =  "file.json"
+    __objects = {}
 
     def all(self) -> dict:
         """
         returns the dictionary __objects
         """
-        return self.__objects()
+        return self.__objects
 
     def new(self, obj):
         """ 
@@ -29,34 +24,27 @@ class FileStorage():
         Args:
             obj (class): self
         """
-        self.__dict__[obj.__class__.__name__ + '.' + obj.__dict__['id']] = obj.__dict__
+        self.__objects[obj.__class__.__name__ + '.' + obj.__dict__['id']] = obj
 
     def save(self):
         """
         serializes __objects to the JSON file (path: __file_path)
         """
-        for o in self.__objects().values():
-            o['updated_at'] = datetime.datetime.now()
-            if type(o['created_at']) != str:
-                o['created_at'] = o['created_at'].strftime("%Y-%m-%dT%H:%M:%S.%f")
-            if type(o['updated_at']) != str:
-                o['updated_at'] = o['updated_at'].strftime("%Y-%m-%dT%H:%M:%S.%f")
-
-        with open(self.__file_path(), 'w') as fp:
-            json.dump(self.__objects(), fp)
+        to_JSON = {obj: self.__objects[obj].to_dict() for obj in self.__objects.keys()}
+        with open(self.__file_path, 'w') as fp:
+            json.dump(to_JSON, fp)
 
     def reload(self):
         """
         deserializes the JSON file to __objects (only if the JSON file (__file_path) exists ; 
         otherwise, do nothing. If the file doesn't exist, no exception should be raised)
         """
-        file = Path(self.__file_path())
-        if file.is_file():
-            with open(self.__file_path(), "r") as fp:
-                self.__dict__.update(json.load(fp))
-
-        for o in self.__objects().values():
-            if type(o['created_at']) == str:
-                o['created_at'] = datetime.datetime.strptime(o['created_at'], "%Y-%m-%dT%H:%M:%S.%f")
-            if type(o['updated_at']) == str:
-                o['updated_at'] = datetime.datetime.strptime(o['updated_at'], "%Y-%m-%dT%H:%M:%S.%f")
+        try:
+            with open(self.__file_path, "r") as fp:
+                _dict = json.load(fp)
+                for o in _dict.values():
+                    className = o["__class__"]
+                    del o["__class__"]
+                    self.new(eval(className)(**o))
+        except FileNotFoundError:
+            return

@@ -4,10 +4,6 @@ from models.base_model import BaseModel
 # from models.user import User
 
 class Review(BaseModel):
-    def __init__(self):
-        """Initializing Review Attrs.
-        """
-        BaseModel.__init__(self)
-        self.text = ""
-        self.place_id = ""
-        self.user_id = ""
+    text = ""
+    place_id = ""
+    user_id = ""

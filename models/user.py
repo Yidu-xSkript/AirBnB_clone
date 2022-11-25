@@ -9,11 +9,8 @@ class User(BaseModel):
         BaseModel (_type_): BaseModel that contains updated_at, created_at & uuid, where this class uses as a parent model
     """
 
-    def __init__(self):
-        """Initializing User Attr.
-        """
-        BaseModel.__init__(self)
-        self.email = ""
-        self.password = ""
-        self.first_name = ""
-        self.last_name = ""
+    email = ""
+    password = ""
+    first_name = ""
+    last_name = ""
+        

@@ -1,8 +1,14 @@
 #!/usr/bin/python3
+"""_summary_
+"""
 from models.base_model import BaseModel
 
 class Place(BaseModel):
-    
+    """_summary_
+
+    Args:
+        BaseModel (_type_): _description_
+    """
     name = ""
     city_id = ""
     user_id = ""

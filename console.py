@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""Define Console"""
 import cmd
 from models.base_model import BaseModel
 from models.amenity import Amenity

@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""JSON File Storage
+Serialize/Deserialize JSON File
+"""
 import json
 from models.base_model import BaseModel
 from models.amenity import Amenity

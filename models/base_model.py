@@ -14,8 +14,8 @@ class BaseModel():
             **kwargs (dict): Key/value pairs of attributes.
         """
         self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
         self.updated_at = datetime.now()
+        self.created_at = datetime.now()
 
         dateToStr = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -47,7 +47,7 @@ class BaseModel():
             dict: self.__dict__
         """
         _dict = self.__dict__.copy()
-        _dict["created_at"] = self.created_at.isoformat()
-        _dict["updated_at"] = self.updated_at.isoformat()
         _dict["__class__"] = self.__class__.__name__
+        _dict["updated_at"] = self.updated_at.isoformat()
+        _dict["created_at"] = self.created_at.isoformat()
         return _dict

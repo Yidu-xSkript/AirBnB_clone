@@ -5,6 +5,7 @@ import datetime
 import uuid
 import models
 
+
 class BaseModel():
     def __init__(self, *args, **kwargs):
         """Initialize a new BaseModel.
@@ -16,16 +17,20 @@ class BaseModel():
         self.created_at = datetime.datetime.now()
         self.updated_at = datetime.datetime.now()
 
+        dateToStr = datetime.datetime.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
+
         if len(kwargs) > 0:
             self.__dict__.update(kwargs)
             for k, v in kwargs.items():
-                if k == "created_at" and type(k) == str or k == "updated_at" and type(k) == str:
-                    self.__dict__[k] = datetime.datetime.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
+                if (k == "created_at" and type(k) == str
+                        or k == "updated_at" and type(k) == str):
+                    self.__dict__[k] = dateToStr
         else:
             models.storage.new(self)
 
     def __str__(self) -> str:
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+        className = self.__class__.__name__
+        return "[{}] ({}) {}".format(className, self.id, self.__dict__)
 
     def save(self):
         """Update the database / storage.

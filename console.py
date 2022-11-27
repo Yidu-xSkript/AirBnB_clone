@@ -5,12 +5,13 @@ from models.base_model import BaseModel
 from models.amenity import Amenity
 from models.city import City
 from models.place import Place
-from models.review  import Review
+from models.review import Review
 from models.state import State
 from models.user import User
 from models import storage
 import shlex
 import re
+
 
 def parse(arg):
     curly_braces = re.search(r"\{(.*?)\}", arg)
@@ -29,11 +30,20 @@ def parse(arg):
         retl.append(curly_braces.group())
         return retl
 
+
 class HBNBCommand(cmd.Cmd):
     """Command Interpreter for AirBnB Clone Project"""
 
     prompt = '(hbnb) '
-    __classes = ['BaseModel', 'City', 'Place', 'Review', 'State', 'User', 'Amenity']
+    __classes = [
+        'BaseModel',
+        'City',
+        'Place',
+        'Review',
+        'State',
+        'User',
+        'Amenity'
+    ]
 
     def do_EOF(self, arg):
         """EOF signal to exit the program."""
@@ -42,12 +52,13 @@ class HBNBCommand(cmd.Cmd):
     def do_quit(self, arg):
         """Quit command to exit the program."""
         return True
-        
+
     def emptyarg(self):
-         pass
+        pass
 
     def do_create(self, arg):
-        """Creates a new instance of A Class, saves it (to the JSON file) and prints the id. Ex: $ create BaseModel."""
+        """Creates a new instance of A Class, saves it
+        (to the JSON file) and prints the id. Ex: $ create BaseModel."""
         if arg == "":
             print("** class name missing **")
             return
@@ -60,7 +71,8 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
     def do_show(self, arg):
-        """Prints the string representation of an instance based on the class name and id. Ex: $ show BaseModel 1234-1234-1234."""
+        """Prints the string representation of an instance based
+        on the class name and id. Ex: $ show BaseModel 1234-1234-1234."""
         args = shlex.split(arg)
 
         if len(args) == 0:
@@ -84,7 +96,9 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, arg):
-        """Deletes an instance based on the class name and id (save the change into the JSON file). Ex: $ destroy BaseModel 1234-1234-1234."""
+        """Deletes an instance based on the class name and id
+        (save the change into the JSON file). Ex: $ destroy
+        BaseModel 1234-1234-1234."""
         args = shlex.split(arg)
 
         if len(args) == 0:
@@ -101,7 +115,7 @@ class HBNBCommand(cmd.Cmd):
 
         storage.reload()
         allData = storage.all()
-        
+
         if args[0] + '.' + args[1] in allData.keys():
             allData.pop(args[0] + '.' + args[1])
             storage.save()
@@ -109,8 +123,9 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints all string representation of all instances based or not on the class name. Ex: $ all BaseModel or $ all."""   
-        
+        """Prints all string representation of all instances based
+        or not on the class name. Ex: $ all BaseModel or $ all."""
+
         args = shlex.split(arg)
         if len(args) > 0 and args[0] not in self.__classes:
             print("** class doesn't exist **")
@@ -129,7 +144,9 @@ class HBNBCommand(cmd.Cmd):
         print(splitData)
 
     def do_update(self, arg):
-        """Updates an instance based on the class name and id by adding or updating attribute (save the change into the JSON file). Ex: $ update <classname> <instance-id> <attribute-name> <value>."""
+        """Updates an instance based on the class name and id
+        by adding or updating attribute (save the change into the JSON file).
+        Ex: $ update <classname> <instance-id> <attribute-name> <value>."""
         args = parse(arg)
 
         if len(args) == 0:
@@ -163,18 +180,21 @@ class HBNBCommand(cmd.Cmd):
                 return
 
         if len(args) == 4:
-            if args[2] in allData[args[0] + '.' + args[1]].__class__.__dict__.keys():
-                valtype = type(allData[args[0] + '.' + args[1]].__class__.__dict__[args[2]])
-                allData[args[0] + '.' + args[1]].__dict__[args[2]] = valtype(args[3])
+            obj = allData[args[0] + '.' + args[1]]
+            if args[2] in obj.__class__.__dict__.keys():
+                valtype = type(obj.__class__.__dict__[args[2]])
+                obj.__dict__[args[2]] = valtype(args[3])
             else:
-                allData[args[0] + '.' + args[1]].__dict__[args[2]] = args[3]
+                obj.__dict__[args[2]] = args[3]
         elif type(eval(args[2])) == dict:
+            obj = allData[args[0] + '.' + args[1]]
             for k, v in eval(args[2]).items():
-                if (k in allData[args[0] + '.' + args[1]].__class__.__dict__.keys() and type(allData[args[0] + '.' + args[1]].__class__.__dict__[k]) in {str, int, float}):
-                    valtype = type(allData[args[0] + '.' + args[1]].__class__.__dict__[k])
-                    allData[args[0] + '.' + args[1]].__dict__[k] = valtype(v)
+                if (k in obj.__class__.__dict__.keys() and
+                        type(obj.__class__.__dict__[k]) in {str, int, float}):
+                    valtype = type(obj.__class__.__dict__[k])
+                    obj.__dict__[k] = valtype(v)
                 else:
-                    allData[args[0] + '.' + args[1]].__dict__[k] = v
+                    obj.__dict__[k] = v
         storage.save()
 
     def do_count(self, arg):
@@ -191,7 +211,7 @@ class HBNBCommand(cmd.Cmd):
         dataKey = list(allData.keys())
         splitData = list()
 
-        for i in range(len(dataKey)):            
+        for i in range(len(dataKey)):
             if args[0] == dataKey[i].split(".")[0]:
                 splitData.append(dataKey[i].split(".")[0])
 
@@ -217,6 +237,7 @@ class HBNBCommand(cmd.Cmd):
                     return argdict[command[0]](call)
         print("*** Unknown syntax: {}".format(arg))
         return False
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()

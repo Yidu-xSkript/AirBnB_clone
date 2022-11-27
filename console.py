@@ -57,8 +57,9 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
-        """Creates a new instance of A Class, saves it
-        (to the JSON file) and prints the id. Ex: $ create BaseModel."""
+        """Usage: create <class>
+        Create a new class instance and print its id.
+        """
         if arg == "":
             print("** class name missing **")
             return
@@ -71,8 +72,9 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
     def do_show(self, arg):
-        """Prints the string representation of an instance based
-        on the class name and id. Ex: $ show BaseModel 1234-1234-1234."""
+        """Usage: show <class> <id> or <class>.show(<id>)
+        Display the string representation of a class instance of a given id.
+        """
         args = shlex.split(arg)
 
         if len(args) == 0:
@@ -96,9 +98,8 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, arg):
-        """Deletes an instance based on the class name and id
-        (save the change into the JSON file). Ex: $ destroy
-        BaseModel 1234-1234-1234."""
+        """Usage: destroy <class> <id> or <class>.destroy(<id>)
+        Delete a class instance of a given id."""
         args = shlex.split(arg)
 
         if len(args) == 0:
@@ -123,8 +124,9 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, arg):
-        """Prints all string representation of all instances based
-        or not on the class name. Ex: $ all BaseModel or $ all."""
+        """Usage: all or all <class> or <class>.all()
+        Display string representations of all instances of a given class.
+        If no class is specified, displays all instantiated objects."""
 
         args = shlex.split(arg)
         if len(args) > 0 and args[0] not in self.__classes:
@@ -144,9 +146,11 @@ class HBNBCommand(cmd.Cmd):
         print(splitData)
 
     def do_update(self, arg):
-        """Updates an instance based on the class name and id
-        by adding or updating attribute (save the change into the JSON file).
-        Ex: $ update <classname> <instance-id> <attribute-name> <value>."""
+        """Usage: update <class> <id> <attribute_name> <attribute_value> or
+       <class>.update(<id>, <attribute_name>, <attribute_value>) or
+       <class>.update(<id>, <dictionary>)
+        Update a class instance of a given id by adding or updating
+        a given attribute key/value pair or dictionary."""
         args = parse(arg)
 
         if len(args) == 0:
@@ -198,7 +202,8 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
     def do_count(self, arg):
-        """Counts how many items there are based on a <classname>"""
+        """Usage: count <class> or <class>.count()
+        Retrieve the number of instances of a given class."""
         args = shlex.split(arg)
 
         if len(args) == 0:

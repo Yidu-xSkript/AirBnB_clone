@@ -1,6 +1,4 @@
 # Airbnb - Console
-[!AirBnB Clone](https://s3.amazonaws.com/alx-intranet.hbtn.io/uploads/medias/2018/6/65f4a1dd9c51265f49d0.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUSBVO6H7D%2F20221125%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221125T063445Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=3c6da9e838baa21278e4fc168978ba989f18d75a5011f82d94f8ab903b027be8)
-
 AirBnB Clone is a complete web application, integrating database storage, a back-end API, and front-end.
 The project currently only implements the back-end console.
 
@@ -9,7 +7,7 @@ The console is a command line interpreter that permits management of the backend
 
 ### Using the Console
 
-The HolbertonBnB console can be run both interactively and non-interactively. 
+The AirBnB console can be run both interactively and non-interactively. 
 To run the console in non-interactive mode, pipe any command(s) into an execution 
 of the file `console.py` at the command line.
 
@@ -24,7 +22,7 @@ EOF  all  count  create  destroy  help  quit  show  update
 $
 ```
 
-Alternatively, to use the HolbertonBnB console in interactive mode, run the 
+Alternatively, to use the AirBnB console in interactive mode, run the 
 file `console.py` by itself:
 
 ```
@@ -55,7 +53,7 @@ $
 
 ### Console Commands
 
-The HolbertonBnB console supports the following commands:
+The AirBnB console supports the following commands:
 
 * **create**
   * Usage: `create <class>`
@@ -228,7 +226,7 @@ m', 'first_name': 'Holberton', 'updated_at': datetime.datetime(2019, 2, 17, 21,
 
 ## Testing:
 
-Unittests for the HolbertonBnB project are defined in the [tests](./tests) 
+Unittests for the AirBnB project are defined in the [tests](./tests) 
 folder. To run the entire test suite simultaneously, execute the following command:
 
 ```

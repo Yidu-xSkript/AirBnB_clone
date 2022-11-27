@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """_summary_
 """
-import datetime
+from datetime import datetime
 import uuid
 import models
 
@@ -14,17 +14,17 @@ class BaseModel():
             **kwargs (dict): Key/value pairs of attributes.
         """
         self.id = str(uuid.uuid4())
-        self.created_at = datetime.datetime.now()
-        self.updated_at = datetime.datetime.now()
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
 
-        dateToStr = datetime.datetime.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
+        dateToStr = "%Y-%m-%dT%H:%M:%S.%f"
 
         if len(kwargs) > 0:
             self.__dict__.update(kwargs)
             for k, v in kwargs.items():
                 if (k == "created_at" and type(k) == str
                         or k == "updated_at" and type(k) == str):
-                    self.__dict__[k] = dateToStr
+                    self.__dict__[k] = datetime.strptime(v, dateToStr)
         else:
             models.storage.new(self)
 
@@ -37,7 +37,7 @@ class BaseModel():
         - update the updated_at attribute.
         - save data to JSON file.
         """
-        self.updated_at = datetime.datetime.now()
+        self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self) -> dict:

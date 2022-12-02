@@ -1,0 +1,30 @@
+header {
+    height: 70px;
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #cccccc;
+    display: table;
+    box-sizing: border-box;
+    padding-left: 20px;
+}
+
+.logo {
+    width: 70px;
+    background-image: url("../images/logo.png");
+    background-repeat: no-repeat;
+}
+
+.logo,
+.menu {
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.menu ul {
+    text-align: right;
+}
+
+.menu ul li {
+    display: inline-block;
+    vertical-align: top;
+}

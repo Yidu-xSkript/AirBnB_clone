@@ -1,6 +1,6 @@
-# Airbnb - Console
+# Airbnb - Console + Static Web
 AirBnB Clone is a complete web application, integrating database storage, a back-end API, and front-end.
-The project currently only implements the back-end console.
+The project currently only implements the back-end console + Static Web.
 
 ## Console:
 The console is a command line interpreter that permits management of the backend of AirBnB - Clone. It can be used to handle and manipulate all classes utilized by the application (achieved by calls on the storage object defined above).

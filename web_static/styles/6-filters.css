@@ -27,6 +27,15 @@ section.filters div.locations {
     width: 25%;
     border-right: 1px solid #DDDDDD;
     line-height: 100%;
+    cursor: pointer;
+}
+section.filters div.amenities {
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    left: 25%;
+    line-height: 100%;
+    cursor: pointer;
 }
 section.filters div.locations ul.popover {
     position: absolute;
@@ -58,13 +67,6 @@ section.filters div.locations ul.popover li ul li {
 }
 section.filters div.locations:hover ul.popover {
     visibility: visible;
-}
-section.filters div.amenities {
-    position: absolute;
-    height: 100%;
-    width: 25%;
-    left: 25%;
-    line-height: 100%;
 }
 section.filters div.amenities ul.popover {
     position: absolute;
